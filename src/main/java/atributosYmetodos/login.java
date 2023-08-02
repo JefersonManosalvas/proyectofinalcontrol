@@ -58,34 +58,37 @@ public class login {
         } else if (rs.next()) {
             int existe = rs.getInt("result");
             if (existe == 1) {
-                JOptionPane.showMessageDialog(null, "Usuario administrador funcional");
+               // JOptionPane.showMessageDialog(null, "Usuario administrador funcional");
 //                Menu1 m1 = new Menu1();
 //                m1.setVisible(true);
 //                this.dispose();
 
+                HORARIOS h1 = new HORARIOS();
+                h1.setVisible(true);
+               
+
 //                String registro = "usuario=" + user + ", contraseña=" + pass + ", intento = Correcto";
 //                guardarRegistro(registro);
             } else if (existe == 2) {
-               JOptionPane.showMessageDialog(null, "Usuario tecnico");
+                JOptionPane.showMessageDialog(null, "Usuario tecnico");
 //                Menu2 m2 = new Menu2();
 //                m2.setVisible(true);
 //                this.dispose();
 //
 //                String registro = "usuario=" + user + ", contraseña=" + pass + ", intento = Correcto";
 //                guardarRegistro(registro);
-            } else if(existe == 3){
-                  JOptionPane.showMessageDialog(null, "Usuario docente");
-                
-            }else if(existe == 4){
-                  JOptionPane.showMessageDialog(null, "Usuario estudiante");
-                
-            }else {
+            } else if (existe == 3) {
+                JOptionPane.showMessageDialog(null, "Usuario docente");
+
+            } else if (existe == 4) {
+                JOptionPane.showMessageDialog(null, "Usuario estudiante");
+
+            } else {
                 JOptionPane.showMessageDialog(null, "Usuario incorrecto");
 //                String registro = "usuario=" + user + ", contraseña=" + pass + ", intento=Incorrecto";
 //                guardarRegistro(registro);
             }
         }
-      
 
     }
 

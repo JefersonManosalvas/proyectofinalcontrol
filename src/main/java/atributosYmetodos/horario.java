@@ -74,8 +74,7 @@ public class horario {
     
     
     public  void registrar_horario(){
-        String insertar=("INSERT INTO `acceso_lab`.`tb_horarios` ( `materia`, `hora_inicio`, `hora_fin`, `dia_semana`, `idLaboratorio`)"
-                + " VALUES ( '"+getMateria()+"', '"+getHora_inicio()+"', '"+getHora_fin()+"', '"+getDia_semana()+"','"+getLaboratorio()+"');"); 
+        String insertar=("call acceso_lab.registro_horarioa('"+getMateria()+"', '"+getHora_inicio()+"', '"+getHora_fin()+"', '"+getDia_semana()+"','"+getLaboratorio()+"');"); 
         
         System.out.println("--"+insertar);
         

@@ -12,22 +12,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Jefferson
  */
-public class HORARIOS extends javax.swing.JFrame {
+public final class HORARIOS extends javax.swing.JFrame {
 
     Map<String, String> labMap = new HashMap<>();
 
     /**
      * Creates new form HORARIOS
      */
-    public HORARIOS() {
+    public HORARIOS() throws ClassNotFoundException {
         initComponents();
         setLocationRelativeTo(null);
         cargarDatos();
+      
+            MOSTRAR_HORARIOS();
+       
     }
 
     /**
@@ -50,7 +55,7 @@ public class HORARIOS extends javax.swing.JFrame {
         txtHoraini = new javax.swing.JTextField();
         txtMateria = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblaconH = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -79,7 +84,7 @@ public class HORARIOS extends javax.swing.JFrame {
         jPanel1.add(txtHoraini, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 40, 100, -1));
         jPanel1.add(txtMateria, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, 100, -1));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblaconH.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -90,7 +95,12 @@ public class HORARIOS extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblaconH.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblaconHMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblaconH);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 820, 230));
 
@@ -132,10 +142,23 @@ public class HORARIOS extends javax.swing.JFrame {
         hr.setDia_semana(txtDia.getText());
         hr.setHora_inicio(txtHoraini.getText());
         hr.setHora_fin(txtHorafin.getText());
-        hr.setLaboratorio(idSeleccionado);    
+        hr.setLaboratorio(idSeleccionado);
         hr.registrar_horario();
+        try {
+            MOSTRAR_HORARIOS();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HORARIOS.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_agregar
+
+    private void tblaconHMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblaconHMouseClicked
+        txtMateria.setText(tblaconH.getValueAt(tblaconH.getSelectedRow(), 0).toString());
+        txtHoraini.setText(tblaconH.getValueAt(tblaconH.getSelectedRow(), 1).toString());
+        txtHorafin.setText(tblaconH.getValueAt(tblaconH.getSelectedRow(), 2).toString());
+        txtDia.setText(tblaconH.getValueAt(tblaconH.getSelectedRow(), 3).toString());
+ 
+    }//GEN-LAST:event_tblaconHMouseClicked
 
     private void cargarDatos() {
         // Conectar a la base de datos
@@ -147,7 +170,7 @@ public class HORARIOS extends javax.swing.JFrame {
 
             while (resultSet.next()) {
                 String id = resultSet.getString("idLaboratorio");
-             
+
                 String nombre = resultSet.getString("nombre");
                 cbxlab.addItem(nombre);
                 labMap.put(nombre, id);
@@ -157,6 +180,38 @@ public class HORARIOS extends javax.swing.JFrame {
             Logger.getLogger(HORARIOS.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void MOSTRAR_HORARIOS() throws ClassNotFoundException {
+
+        String sql = ("SELECT  materia,hora_inicio,hora_fin,dia_semana,nombre FROM tb_horarios,laboratorios where tb_horarios.idLaboratorio=laboratorios.idLaboratorio;");
+        System.out.println("648" + sql);
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("MATERIA");
+        modelo.addColumn("HORA DE INICIO");
+        modelo.addColumn("HORA DE SALIDA");
+        modelo.addColumn("DIA");
+        modelo.addColumn("LABORATORIO");
+        tblaconH.setModel(modelo);
+        String[] datos = new String[5];
+        try {
+            conMysql c1 = new conMysql();
+            try (ResultSet res = c1.EjecutaSql(sql)) {
+                while (res.next()) {
+                    datos[0] = res.getString(1);
+                    datos[1] = res.getString(2);
+                    datos[2] = res.getString(3);
+                    datos[3] = res.getString(4);
+                    datos[4] = res.getString(5);
+                    modelo.addRow(datos);
+
+                }
+            }
+            tblaconH.setModel(modelo);
+
+        } catch (SQLException e) {
+            JOptionPane.showInternalMessageDialog(null, "error" + e.toString());
+        }
+    }
+    
 
     /**
      * @param args the command line arguments
@@ -188,7 +243,11 @@ public class HORARIOS extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new HORARIOS().setVisible(true);
+                try {
+                    new HORARIOS().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(HORARIOS.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -205,7 +264,7 @@ public class HORARIOS extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblaconH;
     private javax.swing.JTextField txtDia;
     private javax.swing.JTextField txtHorafin;
     private javax.swing.JTextField txtHoraini;
