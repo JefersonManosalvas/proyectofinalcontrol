@@ -14,19 +14,18 @@ import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import vista.HORARIOS;
 
 /**
  *
  * @author Jefferson
  */
 public class login {
-    
+
     private String usuario;
     private String contrasenia;
-        
-    
-    
-      public String getUsuario() {
+
+    public String getUsuario() {
         return usuario;
     }
 
@@ -41,65 +40,53 @@ public class login {
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
-    
-     public void logearse() throws ClassNotFoundException {
-       
-        if (usuario.isEmpty() || contrasenia.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Tiene campos en blanco", "Error", JOptionPane.ERROR_MESSAGE);
 
-        } else {
+    public void login() throws ClassNotFoundException, SQLException {
+        conMysql c1 = new conMysql();
+        boolean respuesta = false;
+//        String user = txtuser.getText();
+//        String pass = String.valueOf(txtpssw.getPassword());
+        String con = "call acceso_lab.verificarLogin('" + getUsuario() + "','" + getContrasenia() + "');";
+        System.out.println("///" + con);
 
-            String consulta = ("call telefoonos.login('2','" + getUsuario() + "','" + getContrasenia() + "','',' ');");
-            System.out.println("--" + consulta);
-            conMysql cn = new conMysql();
-            ResultSet rs = cn.EjecutaSql(consulta);
+        ResultSet rs = c1.EjecutaSql(con);
 
-            try {
-                if (rs.next()) {
-                    
-                    JOptionPane.showMessageDialog(null, "Usuario correcto");
+        if (getUsuario().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "INGRESE EL USUARIO");
+        } else if (getContrasenia().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "INGRESE LA CONTRASEÑA");
+        } else if (rs.next()) {
+            int existe = rs.getInt("result");
+            if (existe == 1) {
+                JOptionPane.showMessageDialog(null, "Usuario administrador funcional");
+//                Menu1 m1 = new Menu1();
+//                m1.setVisible(true);
+//                this.dispose();
 
-//                    Menu p1 = new Menu();
-//                    p1.setVisible(true);
-//                    this.dispose();
-
-                    LocalDateTime horaIngreso = LocalDateTime.now();
-                    System.out.println("Hora de ingreso: " + horaIngreso);
-
-                    String registro = "Usuario ingresoc correcto: " + usuario + ", Hora de ingreso: " + horaIngreso;
-                    guardarRegistro(registro);
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Usuario incorrecto");
-                    LocalDateTime horaFalla = LocalDateTime.now();
-                    System.out.println("Hora de falla: " + horaFalla);
-
-                    String registros = "fallido el ingreso del usuario " + usuario + ", Hora de falla: " + horaFalla;
-
-                    guardarRegistro(registros);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+//                String registro = "usuario=" + user + ", contraseña=" + pass + ", intento = Correcto";
+//                guardarRegistro(registro);
+            } else if (existe == 2) {
+               JOptionPane.showMessageDialog(null, "Usuario tecnico");
+//                Menu2 m2 = new Menu2();
+//                m2.setVisible(true);
+//                this.dispose();
+//
+//                String registro = "usuario=" + user + ", contraseña=" + pass + ", intento = Correcto";
+//                guardarRegistro(registro);
+            } else if(existe == 3){
+                  JOptionPane.showMessageDialog(null, "Usuario docente");
+                
+            }else if(existe == 4){
+                  JOptionPane.showMessageDialog(null, "Usuario estudiante");
+                
+            }else {
+                JOptionPane.showMessageDialog(null, "Usuario incorrecto");
+//                String registro = "usuario=" + user + ", contraseña=" + pass + ", intento=Incorrecto";
+//                guardarRegistro(registro);
             }
-
         }
+      
 
     }
 
-    private void guardarRegistro(String registro) {
-        try {
-            String rutaArchivo = "C:\\Users\\Jefferson\\Desktop\\JAVA PROGRAMS\\3A programacion visual\\loging\\Usuario.txt";
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo, true))) {
-                writer.write(registro);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-        }
-    }
-
-  
-
-
-    
-    
 }

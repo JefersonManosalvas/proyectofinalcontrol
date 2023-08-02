@@ -8,16 +8,18 @@ import atributosYmetodos.horario;
 import conecxion.conMysql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
 
 /**
  *
  * @author Jefferson
  */
 public class HORARIOS extends javax.swing.JFrame {
+
+    Map<String, String> labMap = new HashMap<>();
 
     /**
      * Creates new form HORARIOS
@@ -123,35 +125,39 @@ public class HORARIOS extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void agregar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregar
-       horario hr = new horario();
-       hr.setMateria(txtMateria.getText());
-       hr.setDia_semana(txtDia.getText());
-       hr.setHora_inicio(txtHoraini.getText());
-       hr.setHora_fin(txtHorafin.getText());
-       hr.setLaboratorio(cbxlab.getSelectedItem().toString());
-       hr.registrar_horario();
-        
+        horario hr = new horario();
+        String nombreSeleccionado = cbxlab.getSelectedItem().toString();
+        String idSeleccionado = labMap.get(nombreSeleccionado);
+        hr.setMateria(txtMateria.getText());
+        hr.setDia_semana(txtDia.getText());
+        hr.setHora_inicio(txtHoraini.getText());
+        hr.setHora_fin(txtHorafin.getText());
+        hr.setLaboratorio(idSeleccionado);    
+        hr.registrar_horario();
+
     }//GEN-LAST:event_agregar
 
-     private void cargarDatos() {
+    private void cargarDatos() {
         // Conectar a la base de datos
         conMysql c1 = new conMysql();
         try {
             // Obtener las marcas
-            String query = "SELECT * FROM acceso_lab.laboratorios;";
+            String query = "SELECT nombre,idLaboratorio FROM acceso_lab.laboratorios;";
             ResultSet resultSet = c1.EjecutaSql(query);
 
             while (resultSet.next()) {
+                String id = resultSet.getString("idLaboratorio");
+             
                 String nombre = resultSet.getString("nombre");
                 cbxlab.addItem(nombre);
+                labMap.put(nombre, id);
             }
         } catch (SQLException e) {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HORARIOS.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
     /**
      * @param args the command line arguments
      */

@@ -91,25 +91,7 @@ public class horario {
 
   
     
-//    
-//    
-//     private void cargarDatos() {
-//        // Conectar a la base de datos
-//        conMysql c1 = new conMysql();
-//        try {
-//            // Obtener las marcas
-//            String query = "SELECT * FROM acceso_lab.laboratorios;";
-//            ResultSet resultSet = c1.EjecutaSql(query);
-//
-//            while (resultSet.next()) {
-//                String marca = resultSet.getString("marca");
-//                cbxlab.addItem(marca);
-//            }
-//        } catch (SQLException e) {
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(horario.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
+
     
 
 }

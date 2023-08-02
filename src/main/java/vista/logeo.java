@@ -5,6 +5,7 @@
 package vista;
 
 import atributosYmetodos.login;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -165,8 +166,8 @@ public class logeo extends javax.swing.JFrame {
             login log = new login();
             log.setUsuario(txtusuario.getText());
             log.setContrasenia(String.valueOf(txtcontrasenia.getPassword()));
-            log.logearse();
-        } catch (ClassNotFoundException ex) {
+            log.login();
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(logeo.class.getName()).log(Level.SEVERE, null, ex);
         }
         
